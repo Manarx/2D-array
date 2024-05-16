@@ -1,0 +1,426 @@
+//main class 
+import java.util.Arrays;
+import java.util.Scanner;
+public class DSlibrary {
+   
+
+  private static String[][] chUser = {
+        {"0561235678", "Librar"},
+        {"0569876543", "S3cP@0"},
+
+    };
+
+
+           static  Scanner input = new Scanner ( System.in);
+
+      
+          //public Bill[] bill;
+
+    public static void main(String[] args) {
+        
+         //Scanner input = new Scanner ( System.in);
+       
+         
+        Library library = new Library(6, 6);
+
+        // Example books
+        Book First_book = new Book(100,"OOP1", "Computer sience","jon" , 20);
+        Book Second_book = new Book(101,"translate", "literary","mariam" , 30);
+        Book Third_book = new Book(102,"Types of mountains", "geology","mishile " , 60);
+        Book book4 = new Book(103,"Good feelings for a good life", "self-development","Vex King" , 45);
+        Book book5 = new Book(104,"Arabistan orchards", "novel","Osama Al-Muslim" , 75);
+        Book book6 = new Book(105,"fear", "novel","Osama Al-Muslim " , 50);
+
+        // Adding books to the library
+        library.addBook(First_book,0,0);
+        library.addBook(Second_book,1,1);
+        library.addBook(Third_book,2,2);
+        library.addBook(book4,3,3);
+        library.addBook(book5,4,4);
+        library.addBook(book6,5,5);
+        
+        // Display all books
+        library.displayAllBooks();
+        
+       
+        
+        
+        
+        
+         
+        // البحث عن كتاب بواسطة الاسم
+         System.out.println("look for book with name  "  );
+         String bookname = input.nextLine();
+        Book foundBook = library.findBookByName(bookname);
+        if (foundBook != null) {
+            System.out.println(" the book is found: " + foundBook.getName());
+        } else {
+            System.out.println("the book is not found in the library.");
+        }
+        
+          // البحث عن كتاب بواسطةالنوع 
+         System.out.println("look for book with category  "  );
+         String category = input.nextLine();
+        Book foundBook2 = library.findBookByCategory(category);
+        if (foundBook != null) {
+            System.out.println(" the book is found: " + foundBook.getName() );
+        } else {
+            System.out.println("the book is not found in the library.");
+        }
+
+         
+       // حذف الكتب
+        System.out.print("Enter row and column to remove book (e.g., 0 0): ");
+        int row = input.nextInt();
+        int col = input.nextInt();
+        library.removeBook(row, col);
+
+        // Display all books after removal
+        library.displayAllBooks();
+        
+        
+       //----------------------------------------------------------
+       
+        Employee employee = new Employee();
+
+        employee.addEmployee("mohammed");
+        employee.addEmployee("ahmed");
+
+        employee.listEmployeeNames();
+
+        employee.addBook("Diary of a wimpy kid");
+        employee.addBook("harry potter and sorcerer's stone");
+
+        System.out.println("Book Count: " + employee.getBookCount());
+
+        employee.deleteBook("harry potter and sorcerer's stone");
+
+        System.out.println("Book Count: " + employee.getBookCount());
+
+        employee.deleteEmployee("mohammed");
+
+        employee.listEmployeeNames();
+       
+        //--------------------------------------------
+           // Customer details
+        System.out.println("Enter customer name:");
+        String customerName = input.nextLine();
+        input.nextLine();
+
+        System.out.println("Enter customer phone:");
+        String customerPhone = input.nextLine();
+        
+           library.displayAllBooks();
+        System.out.println("Enter the name of book you want to buy ");
+        String Book_name = input.nextLine();
+        Book findbook = library.findBookByName(bookname);
+        if (findbook != null) {
+            System.out.println(" Book information: "+ findbook.getBooknumber() + ", name book : " + findbook.getName() 
+                            +", category: " + findbook.getCategory() +" , author: "+ findbook.getAuther()
+                            + ", price: "+findbook.getPrice());
+            
+                             System.out.println("hello " +customerName + " your total price will be: "+findbook.getPrice() );
+        } else {
+            System.out.println("the book not found");
+        }
+        
+        Bill bill1 = new Bill (1001 , findbook.getName() ,findbook.getPrice()  );
+        
+        //----------------------------------------------------------
+        
+              System.out.println("Enter your phone number (10 digits): ");
+             String phoneNumber = input.nextLine();
+             input.nextLine();
+
+            System.out.println("Enter your password: ");
+            String password = input.nextLine();
+
+
+           boolean isAuthorized = login(phoneNumber, password);
+
+        if (isAuthorized) {
+            System.out.println("Login successful");
+            printBill(phoneNumber);}
+        //print Bill
+          
+         else {
+            System.out.println("Login failed ,The phone number or password incorrect ");
+        }
+    
+        
+    }//end main 
+    
+  
+    
+      public static boolean login(String phoneNumber, String password) {
+        // Check
+        if (phoneNumber.length() != 10 || password.length() != 6) {
+            return false;
+        }
+
+        for (String[] user : chUser) {
+            if (user[0].equals(phoneNumber) && user[1].equals(password)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void printBill(String phoneNumber) {
+
+        System.out.println(" The Bill:");
+        System.out.println("Phone number: " + phoneNumber);
+}}
+
+
+//// library class ////////////////////////////////////////////////
+import java.util.Scanner;
+import java.util.Scanner;
+
+public class Library {
+    
+    private Book[][] books;
+    private Bill bills[][];
+    private Employee[][] employee;
+    Scanner input= new Scanner(System.in);
+
+  
+
+    public Library(int Rows, int Cols) {
+        books = new Book[Rows][Cols];
+    }
+
+    public void addBook(Book book, int row, int col) {
+        if (books[row][col] == null) {
+            books[row][col] = book;
+            System.out.println("Book added successfully.");
+        } else {
+            System.out.println("you cant add more ");
+        }
+    }
+    
+
+public void displayAllBooks() {
+        System.out.println("All books in the library:");
+        for (int i = 0; i < books.length; i++) {
+            for (int j = 0; j < books[i].length; j++) {
+                if (books[i][j] != null) {
+                    System.out.println("Row: " + i + ", Col: " + j + ", number: "
+                            + books[i][j].getBooknumber() + ", name book : " + books[i][j].getName() 
+                            +", category: " + books[i][j].getCategory() +" , author: "+ books[i][j].getAuther()
+                            + ", price: "+books[i][j].getPrice());
+                }
+            }
+        }
+    }
+
+ public Book findBookByName(String name) {
+        for (int i = 0; i < books.length; i++) {
+            for (int j = 0; j < books[i].length; j++) {
+                if  (books[i][j] != null && books[i][j].getName().equalsIgnoreCase(name)) {
+                    return books[i][j];
+                }
+            }
+        }
+        return null; // Book not found
+    }
+ public Book findBookByCategory(String category) {
+        for (int i = 0; i < books.length; i++) {
+            for (int j = 0; j < books[i].length; j++) {
+                if  (books[i][j] != null && books[i][j].getCategory().equalsIgnoreCase(category)) {
+                    return books[i][j];
+                }
+            }
+        }
+        return null; // Book not found
+    }
+
+
+    public Book[][] getBooks() {
+        return books;
+    }
+
+   
+   
+    public void removeBook(int row, int col) {
+        if (books[row][col] != null) {
+            books[row][col] = null;
+            System.out.println("Book removed successfully.");
+        } else {
+            System.out.println("No book found with this row and column .");}}
+
+  
+
+     public void Addbill(Bill bill, int row, int col) {
+        if (bills[row][col] == null) {
+            bills[row][col] = bill;
+            System.out.println("this is your Bill ");
+        } else {
+            System.out.println("wrong");
+        }
+    }   
+}
+    
+////// book class /////////////////////////////////////////////////////
+import java.util.Scanner;
+
+public class Book {
+Scanner input = new Scanner(System.in);    
+    private int booknumber;
+    private String name;
+    private String category;
+    private String auther;
+    private double price;
+    
+    
+    public Book(int booknumber, String name, String category, String auther, int price) {
+        this.booknumber=booknumber;
+        this.name = name;
+        this.category = category;
+        this.auther = auther;
+        this.price = price ;
+        
+    }
+
+    Book() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+      
+
+
+    public int getBooknumber() {
+        return booknumber;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public String getAuther() {
+        return auther;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setAuther(String auther) {
+        this.auther = auther;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+    
+
+    @Override
+    public String toString() {
+        return "Book:  "+" booknumber = " + booknumber + ", name = " + name + ", category = " + category + ", auther = " + auther + ", price=" + price + '}';
+    }
+
+////employee class /////////////////////////////////////////////////////////////
+import java.util.Arrays;
+
+public class Employee {
+    private String[] employeeNames;
+    private int bookCount;
+
+    public Employee() {
+        employeeNames = new String[0];
+        bookCount = 0;
+    }
+
+    public void addEmployee(String name) {
+        employeeNames = Arrays.copyOf(employeeNames, employeeNames.length + 1);
+        employeeNames[employeeNames.length - 1] = name;
+    }
+
+    public void deleteEmployee(String name) {
+        int index = -1;
+        for (int i = 0; i < employeeNames.length; i++) {
+            if (employeeNames[i].equals(name)) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index != -1) {
+            for (int i = index; i < employeeNames.length - 1; i++) {
+                employeeNames[i] = employeeNames[i + 1];
+            }
+            employeeNames = Arrays.copyOf(employeeNames, employeeNames.length - 1);
+        }
+    }
+
+    public void addBook(String bookTitle) {
+        System.out.println("Adding book: " + bookTitle);
+        bookCount++;
+    }
+
+    public void deleteBook(String bookTitle) {
+        System.out.println("Deleting book: " + bookTitle);
+        bookCount--;
+    }
+
+    public void listEmployeeNames() {
+        System.out.println("Employee Names:");
+        for (String name : employeeNames) {
+            System.out.println(name);
+        }
+    }
+
+    public int getBookCount() {
+        return bookCount;
+    }
+}
+/////Bill class /////////////////////////////////////////////////////////////
+public class Bill {
+
+    private double BillNo;
+   
+    private String bookname;
+    private double price;
+  
+    
+
+        
+    public Bill(double BillNo,  String bookname , double price) {
+        this.BillNo = BillNo;
+        this.bookname = bookname;
+        this.price=price;
+    }
+
+    public double getBillNo() {
+        return BillNo;
+    }
+
+    public String getBookname() {
+        return bookname;
+    }
+
+   
+
+    public double getPrice() {
+        return price;
+    }
+    
+
+    @Override
+    public String toString() {
+        return "Bill{" + "BillNo=" + BillNo + ", book name=" + bookname + ", price=" + price + '}';}}
+    
+
+    
+     
